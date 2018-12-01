@@ -3,31 +3,39 @@ package hullVisual;
 import javafx.util.Pair;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Stack;
 
 
-public class PointBoard {
+class PointBoard {
 
-    Stack<Point> points;
-    Stack<Point> hull;
-    public boolean shouldDrawLines = false;
-    ArrayList<Pair<Point, Point>> lines = new ArrayList<>();
+    private Stack<Point> points;
+    private Stack<Point> hull;
+    boolean shouldDrawLines = false;
+    private ArrayList<Pair<Point, Point>> lines = new ArrayList<>();
 
 
-    public PointBoard() {
+    /***
+     * Constructor
+     */
+    PointBoard() {
         this.points = new Stack<>();
         this.hull = new Stack<>();
     }
 
-    public void giveLines(ArrayList<Pair<Point, Point>> lines) {
+    /***
+     * Give the board a set of lines to draw, which are the hull
+     * @param lines The lines which represent the hull
+     */
+    void giveLines(ArrayList<Pair<Point, Point>> lines) {
         this.lines = lines;
     }
 
-    public void paintPoints(Graphics g) {
+    /***
+     * Paint the points on the board
+     * @param g The graphics used to draw the board
+     */
+    void paintPoints(Graphics g) {
         g.setColor(Color.black);
         for (Point point : points) {
             if (hull.contains(point)) {
@@ -43,34 +51,41 @@ public class PointBoard {
         }
     }
 
+    /***
+     * Draw any lines which are a part of a current hull
+     * @param g The current graphics on which to draw
+     */
     private void drawLines(Graphics g) {
         for (Pair<Point, Point> pointPair : lines) {
-            System.out.println("Point Pair: " + pointPair.getKey() + ", " + pointPair.getValue());
             g.setColor(Color.BLACK);
             g.drawLine(pointPair.getKey().x, pointPair.getKey().y, pointPair.getValue().x, pointPair.getValue().y);
         }
     }
 
-    public boolean addPoint(Point newPoint) {
-        if (!points.contains(newPoint)) {
-            this.points.push(newPoint);
-        } else {
-            return false;
-        }
-        return true;
+    /***
+     * Add a point to the current board
+     * @param newPoint The point to add
+     */
+    void addPoint(Point newPoint) {
+        this.points.push(newPoint);
     }
 
-    public Point removeLastPoint() {
-        return points.pop();
+    /***
+     * Remove the most recently added point
+     */
+    void removeLastPoint() {
+        points.pop();
     }
 
-    public void removePoint(int x, int y) {
+    /***
+     * Remove the point at an x,y location from the board
+     * @param x X location of the point to remove
+     * @param y Y location of the point to remove
+     */
+    void removePoint(int x, int y) {
         Point removePoint = null;
         for (Point point : points) {
-            System.out.println("Examined Point: " + point.x + ", " + point.y);
-            System.out.println("Clicked point: " + x + ", " + y);
             if (Math.abs(point.getX() - x) < 10 && Math.abs(point.getY() - y) < 10) {
-                System.out.println("what");
                 removePoint = new Point(point.x, point.y);
             }
         }
@@ -80,21 +95,27 @@ public class PointBoard {
         }
     }
 
-    public ArrayList<Point> getPointList() {
+    /***
+     * Returns an ArrayList which contains all of the points stored by {@code this}
+     * @return The ArrayList containing the points in {@code this}
+     */
+    ArrayList<Point> getPointList() {
         return new ArrayList<>(points);
     }
 
-    public void setHullPoint(Point point) {
+
+    /***
+     * Set a point to be considered part of the hull
+     * @param point The point to be considered part of the hull
+     */
+    void setHullPoint(Point point) {
         hull.add(point);
     }
 
-    public void removeHullPoint(Point point) {
-        if (hull.contains(point)) {
-            hull.remove(point);
-        }
-    }
-
-    public void clearHullPoints() {
+    /***
+     * Clear the hull
+     */
+    void clearHullPoints() {
         hull.clear();
     }
 }

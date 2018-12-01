@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
-    JFrame window;
-    PointBoard board;
-    boolean shouldDraw = false;
+    private JFrame window;
+    private PointBoard board;
+    private boolean shouldDraw = false;
 
     public static void main(String[] args) {
         new Frame();
@@ -31,7 +32,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
         window.setVisible(true);
 
         board = new PointBoard();
-        board.addPoint(new Point(50, 50));
 
         this.revalidate();
         this.repaint();
@@ -39,6 +39,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.drawString("Click to add point. Press s to draw convex hull", 10, 15);
+        g.drawString("Right click to remove a point, right click to remove a specific point.", 10, 35);
 
         Timer timer = new Timer(50, this);
         timer.setDelay(50);
@@ -67,7 +69,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
         shouldDraw = false;
         char key = e.getKeyChar();
         //This is disgusting
-        key = new StringBuilder().append(key).toString().toUpperCase().charAt(0);
+        key = Character.toUpperCase(key);
         if (key == KeyEvent.VK_Q) {
             System.exit(0);
         } else if (key == KeyEvent.VK_Z) {

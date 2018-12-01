@@ -5,25 +5,26 @@ import javafx.util.Pair;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ConvexHullFinder {
+@SuppressWarnings("FieldCanBeLocal")
+class ConvexHullFinder {
     private static ConvexHullFinder ourInstance = new ConvexHullFinder();
-    PointBoard board;
-    ArrayList<Pair<Point, Point>> pairs = new ArrayList<>();
+    private PointBoard board;
+    private ArrayList<Pair<Point, Point>> pairs = new ArrayList<>();
 
 
-    public static ConvexHullFinder getInstance() {
+    static ConvexHullFinder getInstance() {
         return ourInstance;
     }
 
     private ConvexHullFinder() {
     }
 
-    public void givePointBoard(PointBoard board) {
+    void givePointBoard(PointBoard board) {
         this.board = board;
     }
 
     //Got some generic algorithm help from geeks for geeks
-    public ArrayList<Point> solve(PointBoard board) {
+    ArrayList<Point> solve(PointBoard board) {
         pairs.clear();
         board.clearHullPoints();
         ArrayList<Point> points = board.getPointList();
@@ -44,31 +45,27 @@ public class ConvexHullFinder {
         }
 
         int index = leftmostPointIndex;
-        System.out.println(index);
         do {
             convexHull.add(points.get(index));
             int examiningPoint = (index + 1) % points.size();
-            System.out.println(points.size());
             for (int i = 0; i < points.size(); i++) {
                 if (getOrientation(points.get(index), points.get(i), points.get(examiningPoint)) == 2) {
                     examiningPoint = i;
                 }
 
             }
-            pairs.add(new Pair<Point, Point>(points.get(examiningPoint), points.get(index)));
+            pairs.add(new Pair<>(points.get(examiningPoint), points.get(index)));
             index = examiningPoint;
 
-            System.out.println(index);
         } while (index != leftmostPointIndex);
         board.giveLines(pairs);
-        System.out.println("Pairs size: " + pairs.size());
         board.shouldDrawLines = true;
 
         return convexHull;
     }
 
     //Used some code from geeks for geeks for this section, to help me understand the idea behind the algorithm.
-    public int getOrientation(Point pointA, Point pointB, Point pointC) {
+    private int getOrientation(Point pointA, Point pointB, Point pointC) {
         int value = (pointB.y - pointA.y) * (pointC.x - pointB.x) -
                 (pointB.x - pointA.x) * (pointC.y - pointB.y);
         if (value == 0) {
