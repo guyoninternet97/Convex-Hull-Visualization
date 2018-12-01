@@ -1,5 +1,7 @@
 package hullVisual;
 
+import javafx.util.Pair;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -12,16 +14,20 @@ public class PointBoard {
 
     Stack<Point> points;
     Stack<Point> hull;
-    Graphics g;
     public boolean shouldDrawLines = false;
+    ArrayList<Pair<Point, Point>> lines = new ArrayList<>();
+
 
     public PointBoard() {
         this.points = new Stack<>();
         this.hull = new Stack<>();
     }
 
+    public void giveLines(ArrayList<Pair<Point, Point>> lines) {
+        this.lines = lines;
+    }
+
     public void paintPoints(Graphics g) {
-        this.g = g;
         g.setColor(Color.black);
         for (Point point : points) {
             if (hull.contains(point)) {
@@ -38,19 +44,10 @@ public class PointBoard {
     }
 
     private void drawLines(Graphics g) {
-
-    }
-
-    public void paintPoints() {
-        System.out.println("Printed points:");
-        g.setColor(Color.black);
-        for (Point point : points) {
-            if (hull.contains(point)) {
-                g.setColor(Color.red);
-            } else {
-                g.setColor(Color.black);
-            }
-            g.fillOval(point.x, point.y, 6, 6);
+        for (Pair<Point, Point> pointPair : lines) {
+            System.out.println("Point Pair: " + pointPair.getKey() + ", " + pointPair.getValue());
+            g.setColor(Color.BLACK);
+            g.drawLine(pointPair.getKey().x, pointPair.getKey().y, pointPair.getValue().x, pointPair.getValue().y);
         }
     }
 
@@ -95,5 +92,9 @@ public class PointBoard {
         if (hull.contains(point)) {
             hull.remove(point);
         }
+    }
+
+    public void clearHullPoints() {
+        hull.clear();
     }
 }

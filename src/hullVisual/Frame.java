@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
     JFrame window;
     PointBoard board;
+    boolean shouldDraw = false;
 
     public static void main(String[] args) {
         new Frame();
@@ -43,6 +44,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
         timer.setDelay(50);
         timer.start();
         board.paintPoints(g);
+
+        if (shouldDraw) {
+            board.shouldDrawLines = true;
+        }
     }
 
     @Override
@@ -57,6 +62,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
     @Override
     public void keyPressed(KeyEvent e) {
+        board.clearHullPoints();
+        board.shouldDrawLines = false;
+        shouldDraw = false;
         char key = e.getKeyChar();
         //This is disgusting
         key = new StringBuilder().append(key).toString().toUpperCase().charAt(0);
@@ -66,7 +74,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
             board.removeLastPoint();
         } else if (key == KeyEvent.VK_S) {
             ConvexHullFinder.getInstance().givePointBoard(board);
-            ArrayList<Point> convexHull = ConvexHullFinder.getInstance().solve(board.getPointList());
+            ArrayList<Point> convexHull = ConvexHullFinder.getInstance().solve(board);
+            shouldDraw = true;
+            board.shouldDrawLines = true;
             for (Point point : convexHull) {
                 board.setHullPoint(point);
             }
@@ -84,6 +94,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
             Point newPoint = new Point(e.getX(), e.getY());
             board.addPoint(newPoint);
         }
+
+        board.clearHullPoints();
+        board.shouldDrawLines = false;
+        shouldDraw = false;
 
         if (SwingUtilities.isRightMouseButton(e)) {
             board.removePoint(e.getX(), e.getY());

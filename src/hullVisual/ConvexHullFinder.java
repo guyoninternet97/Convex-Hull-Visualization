@@ -1,11 +1,15 @@
 package hullVisual;
 
+import javafx.util.Pair;
+
 import java.awt.*;
 import java.util.ArrayList;
 
 public class ConvexHullFinder {
     private static ConvexHullFinder ourInstance = new ConvexHullFinder();
     PointBoard board;
+    ArrayList<Pair<Point, Point>> pairs = new ArrayList<>();
+
 
     public static ConvexHullFinder getInstance() {
         return ourInstance;
@@ -19,7 +23,10 @@ public class ConvexHullFinder {
     }
 
     //Got some generic algorithm help from geeks for geeks
-    public ArrayList<Point> solve(ArrayList<Point> points) {
+    public ArrayList<Point> solve(PointBoard board) {
+        pairs.clear();
+        board.clearHullPoints();
+        ArrayList<Point> points = board.getPointList();
 
         ArrayList<Point> convexHull = new ArrayList<>();
 
@@ -38,7 +45,6 @@ public class ConvexHullFinder {
 
         int index = leftmostPointIndex;
         System.out.println(index);
-
         do {
             convexHull.add(points.get(index));
             int examiningPoint = (index + 1) % points.size();
@@ -49,9 +55,14 @@ public class ConvexHullFinder {
                 }
 
             }
+            pairs.add(new Pair<Point, Point>(points.get(examiningPoint), points.get(index)));
             index = examiningPoint;
+
             System.out.println(index);
         } while (index != leftmostPointIndex);
+        board.giveLines(pairs);
+        System.out.println("Pairs size: " + pairs.size());
+        board.shouldDrawLines = true;
 
         return convexHull;
     }
