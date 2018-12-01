@@ -3,6 +3,7 @@ package hullVisual;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
     JFrame window;
@@ -63,6 +64,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
             System.exit(0);
         } else if (key == KeyEvent.VK_Z) {
             board.removeLastPoint();
+        } else if (key == KeyEvent.VK_S) {
+            ConvexHullFinder.getInstance().givePointBoard(board);
+            ArrayList<Point> convexHull = ConvexHullFinder.getInstance().solve(board.getPointList());
+            for (Point point : convexHull) {
+                board.setHullPoint(point);
+            }
         }
     }
 

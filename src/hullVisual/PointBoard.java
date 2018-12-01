@@ -11,14 +11,45 @@ import java.util.Stack;
 public class PointBoard {
 
     Stack<Point> points;
+    Stack<Point> hull;
+    Graphics g;
+    public boolean shouldDrawLines = false;
 
     public PointBoard() {
         this.points = new Stack<>();
+        this.hull = new Stack<>();
     }
 
     public void paintPoints(Graphics g) {
+        this.g = g;
         g.setColor(Color.black);
         for (Point point : points) {
+            if (hull.contains(point)) {
+                g.setColor(Color.red);
+            } else {
+                g.setColor(Color.black);
+            }
+            g.fillOval(point.x, point.y, 6, 6);
+        }
+
+        if (shouldDrawLines) {
+            drawLines(g);
+        }
+    }
+
+    private void drawLines(Graphics g) {
+
+    }
+
+    public void paintPoints() {
+        System.out.println("Printed points:");
+        g.setColor(Color.black);
+        for (Point point : points) {
+            if (hull.contains(point)) {
+                g.setColor(Color.red);
+            } else {
+                g.setColor(Color.black);
+            }
             g.fillOval(point.x, point.y, 6, 6);
         }
     }
@@ -54,5 +85,15 @@ public class PointBoard {
 
     public ArrayList<Point> getPointList() {
         return new ArrayList<>(points);
+    }
+
+    public void setHullPoint(Point point) {
+        hull.add(point);
+    }
+
+    public void removeHullPoint(Point point) {
+        if (hull.contains(point)) {
+            hull.remove(point);
+        }
     }
 }
