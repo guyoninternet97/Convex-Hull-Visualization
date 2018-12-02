@@ -40,7 +40,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawString("Click to add point. Press s to draw convex hull", 10, 15);
-        g.drawString("Right click to remove a point, right click to remove a specific point.", 10, 35);
+        g.drawString("Z to remove most recently added point, right click to remove a specific point.", 10, 35);
 
         Timer timer = new Timer(50, this);
         timer.setDelay(50);

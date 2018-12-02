@@ -43,7 +43,7 @@ class PointBoard {
             } else {
                 g.setColor(Color.black);
             }
-            g.fillOval(point.x, point.y, 6, 6);
+            g.fillOval(point.x-2, point.y-2, 6, 6);
         }
 
         if (shouldDrawLines) {
